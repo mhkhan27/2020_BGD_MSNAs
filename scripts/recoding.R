@@ -182,6 +182,16 @@ hh_to_hh <- hh %>% mutate(
   I.WASH.visible_waste_often_always.HH= if_else(visible_waste %in% waste,"yes","no"),
   critical_handwashing_rs= rowSums(hh[,critical_handwashing],na.rm = T),
   I.WASH.handwashing_critical_times.HH=if_else(critical_handwashing_rs==3,"yes" ,"no",NULL),
+  
+  critical_handwashing_v2_rs= rowSums(hh[,c(critical_handwashing,"handwashing_three_times.after_coming_home_from_outside")],na.rm = T),
+  I.WASH.handwashing_critical_times_v2.HH=if_else(critical_handwashing_v2_rs==3,"yes" ,"no",NULL),
+  
+  critical_handwashing_v3_rs= rowSums(hh[,c(critical_handwashing,"handwashing_three_times.when_hands_are_dirty")],na.rm = T),
+  I.WASH.handwashing_critical_times_v3.HH=if_else(critical_handwashing_v3_rs==3,"yes" ,"no",NULL),
+  
+  critical_handwashing_v4_rs= rowSums(hh[,c(critical_handwashing,c("handwashing_three_times.after_coming_home_from_outside", "handwashing_three_times.when_hands_are_dirty"))],na.rm = T),
+  I.WASH.handwashing_critical_times_v4.HH=if_else(critical_handwashing_v4_rs==3,"yes" ,"no",NULL),
+  
   food_source_cash_rs=rowSums(hh[,food_source_cash],na.rm = T),
   I.FSL.food_source_cash.HH= if_else(food_source_cash_rs==1 & food_source.purchase_cash==1,"yes","no"),
   I.FSL.food_source_borrow.HH= if_else(food_source.purchase_credit==1| (food_source.purchase_cash==1 & food_source.support_from_relatives==1)|
@@ -196,6 +206,12 @@ hh_to_hh <- hh %>% mutate(
   I.HEALTH.pregnant_women_hh.HH	=	if_else(pregnant_woman >= 1 , "yes","no",NULL),
   I.HEALTH.atleast_onepregnant_ANC.HH = if_else(pregnant_women_anc > 0, "yes","no"),
   I.HEALTH.all_pregnant_women_anc.HH	= if_else(pregnant_woman == pregnant_women_anc,"yes","no",NULL),
+  I.CHAR.any_food_base_coping_stratefy.HH= if_else(eating_less_preferred_food == "yes" | borrowing_food == "yes"| 
+                                            limiting_portion_size == "yes" | reducing_number_of_meals_a_day == "yes"|
+                                            limiting_adults_food_intake == "yes" | limiting_women_food_intake == "yes"|
+                                            limiting_men_food_intake == "yes","yes","No",NULL),
+  I.CHAR.debt_for_shelter_nfi_need.HH= if_else(debt_reason.buy_clothes == 1 | debt_reason.to_pay_electricity_bill == 1 |
+                                        debt_reason.to_pay_house_rent == 1 | debt_reason.to_repair_or_build_shelter == 1,"yes","no",NULL),
   I.HH_CHAR.emergency_cping_strategy.HH = if_else(rowSums(hh[,emergecy_coping_stra] == "yes",na.rm = T)>0,"yes","no",NULL),
   I.EDU.not_send_back_to_school_total.response= sum(not_send_back_to_school_total,na.rm = T) / sum(school_children_total,na.rm = T)
 )
@@ -557,6 +573,8 @@ hh_to_indv1<- indv_to_indv %>% group_by(X_submission__uuid) %>% summarise(
   I.HH_CHAR.ind_5_17_hh.INDVHH=if_else(sum(I.INDV_CHAR.ind_5_17.INDV == "yes",na.rm = T) >0,"yes","no",NULL),
   I.HEALTH.ind_need_treatment_hh.INDVHH=if_else(sum(ind_need_treatment== "yes",na.rm = T) >0,"yes","no",NULL),
   I.NUTRITION.child_enrolment_nfp_tota.INDVHH = sum(child_enrolment_nfp == "yes",na.rm = T),
+  I.NUTRITION.child_enrolment_nfp_atleast1.INDVHH = if_else(any(child_enrolment_nfp == "yes",na.rm = T),"yes",
+                                                            if_else(all(is.na(child_enrolment_nfp)),NA_character_,"no",NULL)),
   I.HH_CHAR.ind_work_hh.INDVHH = if_else(any(ind_work == "yes" & individual_age > 17,na.rm = T),"yes",
                                          if_else(all(is.na(ind_work)),NA_character_,"no",NULL)),
   
