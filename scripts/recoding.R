@@ -5,7 +5,7 @@ library(stringr)
 library(lubridate)
 # -------------------------------------------------------------------------
 
-population<-c("host","refugee")[2]
+population<-c("host","refugee")[1]
 write_output<-c("yes","no")[1]
 day_to_run <- Sys.Date()
 source("scripts/merge_and_clean_final_dataset.R")
@@ -211,7 +211,7 @@ hh_to_hh <- hh %>% mutate(
                                             limiting_adults_food_intake == "yes" | limiting_women_food_intake == "yes"|
                                             limiting_men_food_intake == "yes","yes","No",NULL),
   I.CHAR.debt_for_shelter_nfi_need.HH= if_else(debt_reason.buy_clothes == 1 | debt_reason.to_pay_electricity_bill == 1 |
-                                        debt_reason.to_pay_house_rent == 1 | debt_reason.to_repair_or_build_shelter == 1,"yes","no",NULL),
+                                        debt_reason.to_pay_house_rent == 1 | debt_reason.to_repair_or_build_shelter == 1,"yes","no","no"),
   I.HH_CHAR.emergency_cping_strategy.HH = if_else(rowSums(hh[,emergecy_coping_stra] == "yes",na.rm = T)>0,"yes","no",NULL),
   I.EDU.not_send_back_to_school_total.response= sum(not_send_back_to_school_total,na.rm = T) / sum(school_children_total,na.rm = T)
 )
